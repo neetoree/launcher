@@ -93,7 +93,7 @@ public class LaunchDownloader implements Runnable {
                 }
             }
             if (!stop) {
-                broadcastDone();
+                launchListener.done(!stop);
                 configService.set("inited", "true");
                 configService.set("serial", launcher.getString("serial"));
                 launch();
@@ -286,7 +286,8 @@ public class LaunchDownloader implements Runnable {
             new ProcessBuilder(javaBin, "-jar", target.getAbsolutePath()).start();
             System.exit(0);
         } else {
-            broadcastDone();
+            launchListener.done(!stop);
+            launchListener.terminate();
         }
     }
 
@@ -302,9 +303,5 @@ public class LaunchDownloader implements Runnable {
 
     public void stop() {
         this.stop = true;
-    }
-
-    public void broadcastDone() {
-        launchListener.done(!stop);
     }
 }
