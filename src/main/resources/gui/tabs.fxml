@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.92" fx:controller="org.neetoree.launcher.gui.controller.TabsController">
+    <center>
+        <StackPane>
+            <children>
+                <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab fx:id="news" text="%tab.news">
+                            <content>
+                                <WebView fx:id="web" minHeight="100.0" minWidth="100.0" prefHeight="-1.0" prefWidth="-1.0"  />
+                            </content>
+                        </Tab>
+                        <Tab fx:id="configs" text="%tab.configs">
+                            <content>
+                                <GridPane alignment="CENTER" maxWidth="400" hgap="10" vgap="10">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" halignment="RIGHT" />
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints vgrow="NEVER" />
+                                        <RowConstraints vgrow="NEVER" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="%settings.minmem" />
+                                        <TextField fx:id="minmem" GridPane.columnIndex="1" />
+                                        <Label text="%settings.maxmem" GridPane.rowIndex="1" />
+                                        <TextField fx:id="maxmem" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                                    </children>
+                                </GridPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="logs" text="%tab.logs">
+                            <content>
+                                <TextArea fx:id="logarea" editable="false"/>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+                <VBox fx:id="progress" alignment="CENTER" spacing="5" visible="false">
+                    <children>
+                        <Label fx:id="fileName" text="%launch.file" />
+                        <ProgressBar fx:id="fileProg" />
+                        <Label fx:id="totalName" text="%launch.total" />
+                        <ProgressBar fx:id="totalProg" />
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+    <bottom>
+        <StackPane>
+            <padding>
+                <Insets bottom="5" left="5" right="5" top="5" />
+            </padding>
+            <Button fx:id="launch" onAction="#launch" alignment="CENTER" text="%main.launch" defaultButton="true">
+                <padding>
+                    <Insets bottom="5" top="5" left="50" right="50" />
+                </padding>
+            </Button>
+            <Button fx:id="stop" onAction="#stop" visible="false" alignment="CENTER" text="%main.stop" defaultButton="true">
+                <padding>
+                    <Insets bottom="5" top="5" left="50" right="50" />
+                </padding>
+            </Button>
+        </StackPane>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.neetoree.launcher.gui.controller.MainController">
+    <top>
+        <GridPane alignment="CENTER" style="-fx-background-color: #ddd" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <padding>
+                <Insets bottom="5" left="10" right="10" top="5" />
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0">
+               <children>
+                  <Label text="%logo.text">
+                     <effect>
+                        <Glow level="0.5" />
+                     </effect></Label>
+               </children>
+                </HBox>
+                <HBox fx:id="logout" alignment="CENTER_RIGHT" visible="false" GridPane.columnIndex="1">
+                    <children>
+                        <Label text="%login.welcome" />
+                        <Label fx:id="welcome">
+                            <padding>
+                                <Insets right="10" />
+                            </padding>
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                        </Label>
+                        <Button cancelButton="true" focusTraversable="false" onAction="#logout" text="%login.logout" />
+                    </children>
+                </HBox>
+            </children>
+        </GridPane>
+    </top>
+    <center>
+        <StackPane BorderPane.alignment="CENTER">
+            <children>
+                <ProgressIndicator fx:id="indicator" maxHeight="100" maxWidth="100" />
+                <BorderPane fx:id="content" />
+            </children></StackPane>
+    </center>
+</BorderPane>
