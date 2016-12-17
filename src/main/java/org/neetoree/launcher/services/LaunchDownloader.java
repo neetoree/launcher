@@ -271,10 +271,6 @@ public class LaunchDownloader implements Runnable {
             return;
         }
 
-        configService.unset("inited");
-
-        stop = true;
-
         if (launchListener.confirmDownload()) {
             File target = new File(LaunchDownloader.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             File tmp = new File(target.getParentFile(), "launcher.tmp");
@@ -284,8 +280,10 @@ public class LaunchDownloader implements Runnable {
             }
             String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
             new ProcessBuilder(javaBin, "-jar", target.getAbsolutePath()).start();
+            configService.unset("inited");
             System.exit(0);
         } else {
+            stop = true;
             launchListener.done(!stop);
             launchListener.terminate();
         }
