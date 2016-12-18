@@ -20,6 +20,8 @@ public class GuiApplication extends Application implements UserInterface {
     @Inject
     private LoginService loginService;
 
+    public static Application APPLICATION;
+
     @Override
     public void run(String[] args) throws Exception {
         launch(args);
@@ -33,5 +35,7 @@ public class GuiApplication extends Application implements UserInterface {
         primaryStage.show();
 
         loginService.trylogin();
+
+        APPLICATION = this;
     }
 }
