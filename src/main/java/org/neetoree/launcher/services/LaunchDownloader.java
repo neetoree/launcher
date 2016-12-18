@@ -321,9 +321,10 @@ public class LaunchDownloader implements Runnable {
             download(launcher.getString("url"), tmp, launcher.getInt("size"));
 
             if (configService.getPlatform().equals("windows")) {
-                String cmd =  "move /y \"" + tmp.getAbsolutePath() + "\" \"" + target.getAbsolutePath() + "\"";
-                System.out.println(cmd);
-                new ProcessBuilder("cmd", "/c", cmd).start();
+                String cmd =  "move /y launcher.tmp launcher.jar";
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", cmd);
+                processBuilder.directory(target.getParentFile());
+                processBuilder.start();
             } else {
                 if (!tmp.renameTo(target)) {
                     throw new IllegalStateException();
