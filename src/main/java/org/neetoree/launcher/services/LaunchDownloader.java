@@ -321,8 +321,8 @@ public class LaunchDownloader implements Runnable {
             download(launcher.getString("url"), tmp, launcher.getInt("size"));
 
             if (configService.getPlatform().equals("windows")) {
-                String cmd =  "ping 127.0.0.1 -n 3 && move /y launcher.tmp launcher.jar";
-                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/K", cmd);
+                String cmd =  "ping 127.0.0.1 -n 3 && move /y launcher.tmp launcher.jar && java -jar launcher.jar";
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", cmd);
                 processBuilder.directory(target.getParentFile());
                 processBuilder.start();
                 Thread.currentThread().sleep(1000);
