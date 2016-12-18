@@ -292,11 +292,13 @@ public class LaunchDownloader implements Runnable {
             configService.unset("inited");
         }
 
+        configService.getGamedir().mkdirs();
+
         File servers = new File(configService.getGamedir(), "servers.dat");
+
         if (servers.exists()) {
             servers.delete();
         }
-        servers.getParentFile().mkdirs();
 
         FileOutputStream fos = new FileOutputStream(servers);
         NBTOutputStream nbtOutputStream = new NBTOutputStream(fos, false);
