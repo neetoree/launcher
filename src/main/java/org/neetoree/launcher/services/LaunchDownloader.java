@@ -90,7 +90,7 @@ public class LaunchDownloader implements Runnable {
                 if (!stop) {
                     processForge(libraries, mods, forgeJson);
                 }
-                if (!stop) {
+                if (!stop && configService.get("libsdone") != null) {
                     processLibraries(libraries);
                 }
             }
@@ -207,6 +207,8 @@ public class LaunchDownloader implements Runnable {
             }
             taskProgress((double)++done / (double)libraries.size());
         }
+
+        configService.set("libsdone", "true");
     }
 
     private void processForge(List<JsonObject> libraries, JsonArray mods, File forgeJson) throws FileNotFoundException {
@@ -280,6 +282,7 @@ public class LaunchDownloader implements Runnable {
     private void processLauncher(JsonObject launcher) throws IOException {
         if (!Objects.equals(launcher.getString("serial"), configService.get("serial"))) {
             configService.unset("inited");
+            configService.unset("libsdone");
         }
 
         if (repository.getVersionName().equals(launcher.getString("version"))) {
