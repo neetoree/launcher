@@ -96,7 +96,7 @@ public class LaunchDownloader implements Runnable {
                 processForge(libraries, mods, forgeJson);
             }
 
-            if (!stop && configService.get("libsdone") != null) {
+            if (!stop || configService.get("libsdone") == null) {
                 if (!"true".equals(configService.get("inited"))) {
                     processLibraries(libraries);
                 }
