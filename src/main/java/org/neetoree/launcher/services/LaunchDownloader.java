@@ -317,10 +317,19 @@ public class LaunchDownloader implements Runnable {
 
         if (launchListener.confirmDownload()) {
             File target = new File(LaunchDownloader.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            File tmp = new File(target.getParentFile(), "launcher-" + launcher.getString("version") + ".jar");
+            File tmp = new File(target.getParentFile(), "launcher.tmp");
             download(launcher.getString("url"), tmp, launcher.getInt("size"));
-            String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            new ProcessBuilder(javaBin, "-jar", tmp.getAbsolutePath()).start();
+
+            if (configService.getPlatform().equals("windows")) {
+                new ProcessBuilder("cmd", "/c", "mv", tmp.getAbsolutePath(), target.getAbsolutePath()).start();
+            } else {
+                if (!tmp.renameTo(target)) {
+                    throw new IllegalStateException();
+                }
+                String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+                new ProcessBuilder(javaBin, "-jar", target.getAbsolutePath()).start();
+            }
+
             configService.unset("inited");
             System.exit(0);
         } else {
