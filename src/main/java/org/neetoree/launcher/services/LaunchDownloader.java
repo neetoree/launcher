@@ -1,5 +1,10 @@
 package org.neetoree.launcher.services;
 
+import com.flowpowered.nbt.CompoundMap;
+import com.flowpowered.nbt.CompoundTag;
+import com.flowpowered.nbt.ListTag;
+import com.flowpowered.nbt.StringTag;
+import com.flowpowered.nbt.stream.NBTOutputStream;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import net.lingala.zip4j.core.ZipFile;
@@ -284,6 +289,27 @@ public class LaunchDownloader implements Runnable {
             configService.unset("inited");
             configService.unset("libsdone");
         }
+
+        File servers = new File(configService.getGamedir(), "servers.dat");
+        if (servers.exists()) {
+            servers.delete();
+        }
+
+        FileOutputStream fos = new FileOutputStream(servers);
+        NBTOutputStream nbtOutputStream = new NBTOutputStream(fos, false);
+        ArrayList<CompoundTag> serversList = new ArrayList<CompoundTag>();
+        CompoundMap result = new CompoundMap();
+        result.put("name", new StringTag("name", "NEEToree Server"));
+        result.put("ip", new StringTag("ip", "neetoree.org"));
+        serversList.add(new CompoundTag("", result));
+        ListTag<CompoundTag> listTag = new ListTag<CompoundTag>("servers", CompoundTag.class, serversList);
+        CompoundTag root = new CompoundTag("", new CompoundMap());
+        root.getValue().put("servers", listTag);
+        nbtOutputStream.writeTag(root);
+        nbtOutputStream.flush();
+        fos.flush();
+        nbtOutputStream.close();
+        fos.close();
 
         if (repository.getVersionName().equals(launcher.getString("version"))) {
             return;
