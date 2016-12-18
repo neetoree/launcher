@@ -290,7 +290,6 @@ public class LaunchDownloader implements Runnable {
     private void processLauncher(JsonObject launcher) throws IOException, InterruptedException {
         if (!Objects.equals(launcher.getString("serial"), configService.get("serial"))) {
             configService.unset("inited");
-            configService.unset("libsdone");
         }
 
         File servers = new File(configService.getGamedir(), "servers.dat");
