@@ -230,7 +230,7 @@ public class LaunchDownloader implements Runnable {
 
         taskName(textService.text("get.mc.mods"));
         taskProgress(-1);
-        File modsDir = new File(configService.getGamedir(), "mods");
+        File modsDir = configService.getGamedir();
         int done = 0;
         for (JsonValue modv : mods) {
             JsonObject modo = (JsonObject) modv;
