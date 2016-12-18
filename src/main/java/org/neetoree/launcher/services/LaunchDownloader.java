@@ -1,6 +1,5 @@
 package org.neetoree.launcher.services;
 
-import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import net.lingala.zip4j.core.ZipFile;
@@ -8,7 +7,9 @@ import net.lingala.zip4j.exception.ZipException;
 import org.neetoree.launcher.session.SessionConfig;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -66,6 +67,7 @@ public class LaunchDownloader implements Runnable {
             JsonObject root = Json.createReader(fetch(repository.getManifestUrl())).readObject();
             JsonObject launcher = root.getJsonObject("launcher");
             JsonObject versions = root.getJsonObject("versions");
+            JsonArray mods = root.getJsonArray("mods");
 
             processLauncher(launcher);
 
@@ -86,7 +88,7 @@ public class LaunchDownloader implements Runnable {
                     processVanilla(libraries, vanillaJson, versionsDir);
                 }
                 if (!stop) {
-                    processForge(libraries, forgeJson);
+                    processForge(libraries, mods, forgeJson);
                 }
                 if (!stop) {
                     processLibraries(libraries);
@@ -145,7 +147,6 @@ public class LaunchDownloader implements Runnable {
             }
         }
 
-        System.out.println(Joiner.on(' ').join(commands));
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
@@ -208,7 +209,7 @@ public class LaunchDownloader implements Runnable {
         }
     }
 
-    private void processForge(List<JsonObject> libraries, File forgeJson) throws FileNotFoundException {
+    private void processForge(List<JsonObject> libraries, JsonArray mods, File forgeJson) throws FileNotFoundException {
         JsonObject root = Json.createReader(new FileReader(forgeJson)).readObject();
         configService.set("arguments", root.getString("minecraftArguments"));
         configService.set("mainclass", root.getString("mainClass"));
@@ -225,6 +226,19 @@ public class LaunchDownloader implements Runnable {
                 .add("url", remove.getString("url"))
                 .add("classifier", "universal").build());
         libraries.addAll(collect);
+
+
+        taskName(textService.text("get.mc.mods"));
+        taskProgress(-1);
+        File modsDir = new File(configService.getGamedir(), "mods");
+        int done = 0;
+        for (JsonValue modv : mods) {
+            JsonObject modo = (JsonObject) modv;
+            String url = modo.getString("url");
+            File dest = new File(modsDir, modo.getString("name").replace('/', File.separatorChar));
+            download(url, dest, modo.getInt("size"));
+            taskProgress((double)++done / (double)mods.size());
+        }
     }
 
     private void processVanilla(List<JsonObject> libraries, File vanillaJson, File versionsDir) throws FileNotFoundException {

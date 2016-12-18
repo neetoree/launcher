@@ -38,6 +38,9 @@ public class LoginService {
     @Inject
     private NEEToreeRepository repository;
 
+    @Inject
+    private TextService textService;
+
     public LoginService() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext ssl = SSLContext.getInstance("SSL");
         ssl.init(null, new TrustManager[]{new X509TrustManager() {
@@ -134,7 +137,7 @@ public class LoginService {
             }
             broadcast(LoginState.LOGGEDIN);
         } catch (Exception e) {
-            broadcast(e.getMessage());
+            broadcast(textService.text("login.failure"));
             e.printStackTrace();
             return false;
         }
