@@ -284,7 +284,7 @@ public class LaunchDownloader implements Runnable {
                 .collect(Collectors.toList()));
     }
 
-    private void processLauncher(JsonObject launcher) throws IOException {
+    private void processLauncher(JsonObject launcher) throws IOException, InterruptedException {
         if (!Objects.equals(launcher.getString("serial"), configService.get("serial"))) {
             configService.unset("inited");
             configService.unset("libsdone");
@@ -321,10 +321,11 @@ public class LaunchDownloader implements Runnable {
             download(launcher.getString("url"), tmp, launcher.getInt("size"));
 
             if (configService.getPlatform().equals("windows")) {
-                String cmd =  "move /y launcher.tmp launcher.jar";
-                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", cmd);
+                String cmd =  "ping 127.0.0.1 -n 3 && move /y launcher.tmp launcher.jar";
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/K", cmd);
                 processBuilder.directory(target.getParentFile());
                 processBuilder.start();
+                Thread.currentThread().sleep(1000);
             } else {
                 if (!tmp.renameTo(target)) {
                     throw new IllegalStateException();
