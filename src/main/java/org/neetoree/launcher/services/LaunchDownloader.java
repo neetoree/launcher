@@ -131,6 +131,7 @@ public class LaunchDownloader implements Runnable {
         commands.add("-Xms" + configService.get("minmem", "512") + "M");
         commands.add("-Xmx" + configService.get("maxmem", "1300") + "M");
         commands.add("-Djava.library.path=" + new File(configService.getGamedir(), "natives"));
+        commands.add("-DauthToken=" + sessionConfig.get().getAccessToken());
         commands.add("-cp");
         commands.add(libs.toString());
         commands.add(configService.get("mainclass"));
