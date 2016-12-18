@@ -76,29 +76,32 @@ public class LaunchDownloader implements Runnable {
 
             processLauncher(launcher);
 
-            if (!"true".equals(configService.get("inited"))) {
-                String vanillaManifest = versions.getString("vanilla");
-                String forgeManifest = versions.getString("forge");
+            String vanillaManifest = versions.getString("vanilla");
+            String forgeManifest = versions.getString("forge");
 
-                File versionsDir = new File(configService.getGamedir(), "versions");
+            File versionsDir = new File(configService.getGamedir(), "versions");
 
-                File vanillaJson = new File(versionsDir, "vanilla.json");
-                download(vanillaManifest, vanillaJson, -1);
+            File vanillaJson = new File(versionsDir, "vanilla.json");
+            download(vanillaManifest, vanillaJson, -1);
 
-                File forgeJson = new File(versionsDir, "forge.json");
-                download(forgeManifest, forgeJson, -1);
+            File forgeJson = new File(versionsDir, "forge.json");
+            download(forgeManifest, forgeJson, -1);
 
-                List<JsonObject> libraries = new ArrayList<>();
-                if (!stop) {
-                    processVanilla(libraries, vanillaJson, versionsDir);
-                }
-                if (!stop) {
-                    processForge(libraries, mods, forgeJson);
-                }
-                if (!stop && configService.get("libsdone") != null) {
+            List<JsonObject> libraries = new ArrayList<>();
+            if (!stop) {
+                processVanilla(libraries, vanillaJson, versionsDir);
+            }
+
+            if (!stop) {
+                processForge(libraries, mods, forgeJson);
+            }
+
+            if (!stop && configService.get("libsdone") != null) {
+                if (!"true".equals(configService.get("inited"))) {
                     processLibraries(libraries);
                 }
             }
+
             if (!stop) {
                 launchListener.done(!stop);
                 configService.set("inited", "true");
